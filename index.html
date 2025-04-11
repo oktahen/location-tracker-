@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Location Tracker</title>
+</head>
+<body>
+  <h1>Welcome</h1>
+  <p>Please allow location access.</p>
+
+  <script>
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        fetch('/location', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        })
+        .then(res => res.text())
+        .then(data => {
+          document.body.innerHTML += `<p>${data}</p>`;
+        });
+      },
+      function(error) {
+        document.body.innerHTML += `<p>Location access denied.</p>`;
+      }
+    );
+  </script>
+</body>
+</html>
